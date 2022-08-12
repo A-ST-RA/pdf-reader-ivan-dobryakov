@@ -3,23 +3,32 @@ import SinglePage from "../pdf-viewer/single.page.viewer";
 import { BookChangeType } from "./book-change.type"
 
 const style = {
+    content: {
+        padding: '200px 250px',
+    },
     bookName: {
         display: 'flex',
         'justify-content': 'center',
+        'margin-top': '10px',
+        'max-wigth': '250px'
     },
     bookInfo: {
         display: 'flex',
         'flex-direction': 'column',
-        background: '#FDEBD3',
         border: 'none',
         'border-radius': '1%',
+        width: '300px',
         height: '300px',
     },
     booksList: {
-        display: 'flex',
-        'align-items': 'center',
-        'flex-direction': 'row',
-        'justify-content': 'space-around'
+        display: 'grid',
+        'grid-template-columns': '1fr 1fr 1fr',
+        'grid-template-rows': '1fr 1fr 1fr',
+        'grid-row-gap': '120px',
+        'grid-column-gap': '10px',
+        'max-width': '300px',
+        margin: '0',
+        padding: '0 250px',
     }
 };
 
@@ -34,7 +43,7 @@ export const BookChanger = (props: {booksInfo: BookChangeType[]}) => {
 
     return bookPath ? 
             <SinglePage pdf={bookPath} paragrafs={getParagrafsListByPath(bookPath)} onClick={openPdf}/> : 
-            <div>
+            <div style={style.content}>
                 <div style={style.booksList}>
                     {
                         props.booksInfo.map((el: BookChangeType) => 

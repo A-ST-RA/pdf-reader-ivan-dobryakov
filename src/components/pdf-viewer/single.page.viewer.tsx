@@ -1,3 +1,4 @@
+import { relative } from "path";
 import React, { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { Paragraf } from "../book-changer/book-change.type";
@@ -5,14 +6,22 @@ import { Paragraf } from "../book-changer/book-change.type";
 const style = {
   wrapper: {
     display: 'flex',
+    'flex-direction': 'row-reverse',
+  },
+  pagesWrapper: {
+    display: 'flex',
+    'flex-direction': 'row-reverse',
+    'margin-top': '300px',
   },
   paragrafs: {
     paddingLeft: 30,
+    paddingTop: 50,
     display: 'flex',
     'flex-direction': 'column',
     'justify-content': 'center',
-    'overflow-y': 'scroll',
-    height: '100vh',
+  },
+  title: {
+    paddingBottom: 30
   },
   paragrafText: {
     display: 'flex',
@@ -20,6 +29,21 @@ const style = {
     border: 'none',
     background: '#FDEBD3',
     paddingBottom: '5px',
+    marginTop: '10px',
+  },
+  homeBtn: {
+    width: '230px',
+    height: '30px',
+    'margin-top': '200px', 
+    border: 'none',
+    'background-color': 'rgb(253, 235, 211)',
+    'font-size': '25px',
+  },
+  
+  homeArrow: {
+    width: '30px',
+    position: 'absolute',
+    top: 150
   }
 };
 
@@ -56,14 +80,19 @@ export default function SinglePage(props: { pdf: string; onClick: (e: any) => vo
 
   return (
     <div style={style.wrapper}>
-      <button onClick={props.onClick}>Home</button>
       <div style={style.paragrafs}>
-        <h2>Содержание</h2>
+        <h2 style={style.title}>Содержание</h2>
         {props.paragrafs.map((el) => <button style={style.paragrafText} id={el.page.toString()} onClick={goToTheParagraf}>
           {el.name}
-        </button>)}
+        </button>
+        )
+        }
+        <div style={{position: 'relative'}}>
+          <img style={{position: 'absolute', top: '195px'}} src="./images/Home.png" alt=""/>
+        <button style={style.homeBtn} onClick={props.onClick}>Вернуться</button>
+        </div>
       </div>
-      <div>
+      <div style={{position: 'relative'}}>
         <Document
           file={pdf}
           options={{ workerSrc: "./pdf.worker.js" }}
@@ -71,20 +100,18 @@ export default function SinglePage(props: { pdf: string; onClick: (e: any) => vo
         >
           <Page pageNumber={pageNumber} />
         </Document>
-        <div style={style.wrapper}>
-          <p>
-            Страница {pageNumber || (numPages ? 1 : "--")} из {numPages || "--"}
-          </p>
-          <button type="button" disabled={pageNumber <= 1} onClick={previousPage}>
-            Назад
+        <div style={style.pagesWrapper}>
+          <button type="button" disabled={pageNumber <= 1} onClick={previousPage} style={{border: 'none', backgroundImage: 'url(images/Vector.png)', width: 67, height: 67,transform: 'rotate(180deg)'}}>
+            
           </button>
           { pageNumber !== numPages ?
             <button
               type="button"
               disabled={pageNumber >= numPages}
               onClick={nextPage}
+              style={{border: 'none', backgroundImage: 'url(images/Vector.png)', width: 67, height: 67,backgroundColor: 'rgb(253, 235, 211)',}}
             >
-              Далее
+              
             </button> :
             <button
               type="button"
@@ -94,6 +121,7 @@ export default function SinglePage(props: { pdf: string; onClick: (e: any) => vo
             </button>
           }
         </div>
+        <img style={{position: 'absolute', right: '-200px', bottom: '0px'}} src="./images/Group.png" alt=""/>
       </div>
     </div>
   );
