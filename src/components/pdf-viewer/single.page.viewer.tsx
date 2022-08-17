@@ -11,7 +11,7 @@ const style = {
   pagesWrapper: {
     display: 'flex',
     'flex-direction': 'row-reverse',
-    'margin-top': '300px',
+    'margin-top': '50px',
   },
   paragrafs: {
     paddingLeft: 30,
@@ -34,7 +34,7 @@ const style = {
   homeBtn: {
     width: '230px',
     height: '30px',
-    'margin-top': '200px', 
+    'margin-top': '70px', 
     border: 'none',
     'background-color': 'rgb(253, 235, 211)',
     'font-size': '25px',
@@ -75,9 +75,10 @@ export default function SinglePage(props: { pdf: string; onClick: (e: any) => vo
   }
 
   function nextPage() {
+    console.log('aaa')
     changePage(1);
   }
-
+  
   return (
     <div style={style.wrapper}>
       <div style={style.paragrafs}>
@@ -88,7 +89,7 @@ export default function SinglePage(props: { pdf: string; onClick: (e: any) => vo
         )
         }
         <div style={{position: 'relative'}}>
-          <img style={{position: 'absolute', top: '195px'}} src="./images/Home.png" alt=""/>
+          <img style={{position: 'absolute', top: '65px'}} src="./images/Home.png" alt=""/>
         <button style={style.homeBtn} onClick={props.onClick}>Вернуться</button>
         </div>
       </div>
@@ -98,17 +99,17 @@ export default function SinglePage(props: { pdf: string; onClick: (e: any) => vo
           options={{ workerSrc: "./pdf.worker.js" }}
           onLoadSuccess={onDocumentLoadSuccess}
         >
-          <Page pageNumber={pageNumber} />
+          <Page width={600} height={600} pageNumber={pageNumber} />
         </Document>
         <div style={style.pagesWrapper}>
-          <button type="button" disabled={pageNumber <= 1} onClick={previousPage} style={{border: 'none', backgroundImage: 'url(images/Vector.png)', width: 67, height: 67,transform: 'rotate(180deg)'}}>
+          <button type="button" disabled={pageNumber >= numPages} onClick={nextPage} style={{border: 'none', backgroundImage: 'url(images/Vector.png)', width: 67, height: 67,transform: 'rotate(180deg)'}}>
             
           </button>
           { pageNumber !== numPages ?
             <button
               type="button"
-              disabled={pageNumber >= numPages}
-              onClick={nextPage}
+              disabled={pageNumber <= 1}
+              onClick={previousPage}
               style={{border: 'none', backgroundImage: 'url(images/Vector.png)', width: 67, height: 67,backgroundColor: 'rgb(253, 235, 211)',}}
             >
               
