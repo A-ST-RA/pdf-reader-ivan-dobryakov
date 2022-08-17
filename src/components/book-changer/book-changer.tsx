@@ -4,7 +4,7 @@ import { BookChangeType } from "./book-change.type"
 
 const style = {
     content: {
-        padding: '200px 250px',
+        padding: '200px 350px',
     },
     bookName: {
         display: 'flex',
@@ -26,9 +26,6 @@ const style = {
         'grid-template-rows': '1fr 1fr 1fr',
         'grid-row-gap': '120px',
         'grid-column-gap': '10px',
-        'max-width': '300px',
-        margin: '0',
-        padding: '0 250px',
     }
 };
 

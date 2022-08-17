@@ -14,7 +14,6 @@
     "@types/react-dom": "^17.0.14",
     "child_process": "^1.0.2",
     "cross-env": "^7.0.3",
-    "electron-packager": "^15.4.0",
     "pdfjs-dist": "^2.13.216",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -66,6 +65,7 @@
     "electron": "^17.2.0",
     "electron-builder": "^22.14.13",
     "electron-is-dev": "^2.0.0",
+    "electron-packager": "^15.5.1",
     "wait-on": "^6.0.1",
     "worker-loader": "^3.0.8"
   }
