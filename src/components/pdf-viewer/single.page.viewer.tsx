@@ -1,7 +1,8 @@
-import { relative } from "path";
-import React, { useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
+import React, { useLayoutEffect, useState } from "react";
+import { Document, Page } from "react-pdf";
 import { Paragraf } from "../book-changer/book-change.type";
+import BookMark from "../bookmark";
+import Markup from "../markup";
 
 const style = {
   wrapper: {
@@ -21,14 +22,17 @@ const style = {
     'justify-content': 'center',
   },
   title: {
+    marginLeft: '0',
     paddingBottom: 30
   },
   paragrafText: {
     display: 'flex',
-    'justify-content': 'flex-center',
+    'justify-content': 'flex-start',
     border: 'none',
     background: '#FDEBD3',
+    marginLeft: '0',
     paddingBottom: '5px',
+    'text-align': 'left',
     marginTop: '10px',
   },
   homeBtn: {
@@ -47,12 +51,42 @@ const style = {
   }
 };
 
+// TODO: Вынеси в отдельный компонент
+
 export default function SinglePage(props: { pdf: string; onClick: (e: any) => void; paragrafs: Paragraf[] }) {
   const [numPages, setNumPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
 
   const { pdf } = props;
-
+  
+  const [isMarkupModalOpen, setIsMarkupModalOpen] = useState(false);
+  const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
+  
+  const createMarkup = (data: string) => {
+    const localStorageMarkupData = JSON.parse(localStorage.getItem('markups' + pdf) || '{"list":[]}');
+    
+    if (localStorageMarkupData?.list) {
+      localStorageMarkupData.list.push(data);
+    } else {
+      localStorage.setItem('markups' + pdf, JSON.stringify({ list: [data]}));
+    }
+    localStorage.setItem('markups' + pdf, JSON.stringify({ list: localStorageMarkupData.list}));
+  }
+  
+  const createBookmarks = (data: { mark: string; pageNumber: number }) => {
+    const localStorageMarkupData = JSON.parse(localStorage.getItem('bookmarks' + pdf) || '{"list":[]}');
+    
+    if (localStorageMarkupData?.list) {
+      localStorageMarkupData.list.push(data);
+    } else {
+      localStorage.setItem('bookmarks' + pdf, JSON.stringify({ list: [data]}));
+    }
+    localStorage.setItem('bookmarks' + pdf, JSON.stringify({ list: localStorageMarkupData.list}));
+  }
+  
+  const markaups = JSON.parse(localStorage.getItem('markups' + pdf) || '{"list":[]}')?.list;
+  const bookmark = JSON.parse(localStorage.getItem('bookmarks' + pdf) || '{"list":[]}')?.list;
+  
   function onDocumentLoadSuccess({ numPages }: any) {
     setNumPages(numPages);
     setPageNumber(1);
@@ -82,6 +116,8 @@ export default function SinglePage(props: { pdf: string; onClick: (e: any) => vo
   return (
     <div style={style.wrapper}>
       <div style={style.paragrafs}>
+        <button onClick={() => setIsMarkupModalOpen(true)}>Открыть заметки</button>
+        <button onClick={() => setIsBookmarkModalOpen(true)}>Открыть закладки</button>
         <h2 style={style.title}>Содержание</h2>
         {props.paragrafs.map((el) => <button style={style.paragrafText} id={el.page.toString()} onClick={goToTheParagraf}>
           {el.name}
@@ -122,8 +158,9 @@ export default function SinglePage(props: { pdf: string; onClick: (e: any) => vo
             </button>
           }
         </div>
-        <img style={{position: 'absolute', right: '-200px', bottom: '0px'}} src="./images/Group.png" alt=""/>
       </div>
+      <Markup isOpen={isMarkupModalOpen} onCloseClick={() => setIsMarkupModalOpen(false)} list={markaups || []} storeNewItem={createMarkup}></Markup>
+      <BookMark isOpen={isBookmarkModalOpen} onCloseClick={() => setIsBookmarkModalOpen(false)} list={bookmark || []} storeNewItem={createBookmarks} changePage={changePage}></BookMark>
     </div>
   );
 }
